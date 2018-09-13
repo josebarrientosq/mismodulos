@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_euro_landscape" model="report.paperformat">
+            <field name="name">European A4 Landscape</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <template id="efacturacion_template_pleventas">
+            <t t-call="report.html_container">
+                 <t t-call="report.external_layout">
+                     <div class="page">
+                         <h1>INFORME PLE VENTAS</h1>
+                            <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>MOVIMIENTO</th>
+                                            <th>FECHA EMISION</th>
+                                            <th>FECHA VENCIMIENTO</th>
+                                            <th>TIPO COMPROBANTE</th>
+                                            <th>SERIE</th>
+                                            <th>CORRELATIVO</th>
+                                            <th>TIPO DOCUMENTO</th>
+                                            <th>NUMERO DOC</th>
+                                            <th>NOMBRE O RAZON SOCIAL</th>
+                                            <th>BASE IMPONIBLE</th>
+                                            <th>IGV</th>
+                                            <th>IMPORTE TOTAL</th>
+                                            <th>CODIGO MONEDA</th>
+                                            <th>FECHA ORIGINAL</th>
+                                            <th>TIPO ORIGINAL</th>
+                                            <th>SERIE ORIGINAL</th>
+                                            <th>NUMERO ORIGINAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="docs" t-as="doc">
+                                            <tr style="border:solid grey 4px">
+                                                <td><span t-esc="doc.move_id.id"/></td>
+                                                <td><span t-esc="doc.date_invoice"/></td>
+                                                <td><span t-esc="doc.date_due"/></td>
+                                                <td><span t-esc="doc.journal_id.invoice_type_code_id"/></td>
+                                                <td><span t-esc="doc.number"/></td>
+                                                <td><span t-esc="doc.number"/></td>
+                                                <td><span t-esc="doc.partner_id.catalog_06_id.code"/></td>
+                                                <td><span t-esc="doc.partner_id.vat"/></td>
+                                                <td><span t-esc="doc.partner_id.name"/></td>
+                                                <td><span t-esc="doc.amount_untaxed"/></td>
+                                                <td><span t-esc="doc.amount_tax"/></td>
+                                                <td><span t-esc="doc.amount_total"/></td>
+                                                <td><span t-esc="doc.currency_id.name"/></td>
+                                                <td><span t-esc="doc.refund_invoice_id.date_invoice"/></td>
+                                                <td><span t-esc="doc.refund_invoice_id.journal_id.invoice_type_code_id"/></td>
+                                                <td><span t-esc="doc.refund_invoice_id.number"/></td>
+                                                <td><span t-esc="doc.refund_invoice_id.number"/></td>
+
+
+
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                            </table>
+                     </div>
+                </t>
+            </t>
+        </template>
+        <report id="efacturacion.report_ple"
+                model="account.invoice"
+                name="efacturacion.efacturacion_template_pleventas"
+                report_type="qweb-html"
+                string="ple de ventas"
+                paperformat="efacturacion.paperformat_euro_landscape"
+                />
+
+    </data>
+
+</odoo>

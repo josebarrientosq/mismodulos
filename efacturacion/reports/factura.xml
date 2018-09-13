@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="efacturacion_template_factura">
+            <t t-call="report.html_container">
+
+
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+
+                            <t t-set="company" t-value="res_company"></t>
+                            <div class="header">
+                                <div class="row">
+
+                                    <div class="col-xs-6">
+                                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                                            style="max-height: 85px;" />
+                                    </div>
+
+                                    <div class="col-xs-6 text-right" style="font:15px lucida-console,sans-serif !important; background-color:#3498DB !important;" >
+                                        <span t-field="company.partner_id" />
+                                        <span t-field="company.partner_id.street" />
+                                        <span t-field="company.partner_id.street2" />
+                                        <span t-field="company.partner_id.city" />
+                                        <span t-field="company.partner_id.country_id" />
+                                        <span t-field="company.partner_id.vat" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-xs-5 pull-right">
+                                    <t t-set="company" t-value="res_company"></t>
+                                    <h1><span t-field="company.partner_id.vat" /></h1>
+                                    <span t-field="company.partner_id.vat" />
+                                    <h3><p class="text-center">FACTURA ELECTRÓNICA</p></h3>
+                                    <h3><p class="text-center" t-field="doc.number"/></h3>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td style=" background-color: #3498DB; color:#fff !important;"><strong>Cliente</strong></td>
+                                            <td>
+                                                <span t-field="doc.partner_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td style=" background-color: #3498DB; color:#fff !important;"><strong>RUC</strong></td>
+                                            <td>
+                                                <span t-field="doc.partner_id.vat"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td style=" background-color: #3498DB; color:#fff !important;"><strong>Direccion</strong></td>
+                                            <td>
+                                                <span t-field="doc.partner_id.street"/>
+                                                <span t-field="doc.partner_id.state_id"/>
+                                                <span t-field="doc.partner_id.province_id"/>
+                                                <span t-field="doc.partner_id.district_id"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                            </div>
+
+                            <div class="row">
+                                <table class="table table-condensed table table-striped" style=" table-layout:fixed; padding-top=20px;" >
+                                    <thead style=" background-color: #3498DB;">
+                                        <tr>
+                                            <th width="30px" style="border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Fecha Emisión</th>
+                                            <th width="30px" style="border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Fecha Vencimiento</th>
+                                            <th width="20px" style="border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Condiciones</th>
+                                            <th width="20px" style="border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Vendedor</th>
+                                        </tr>
+                                   </thead>
+                                   <tbody>
+                                    <tr>
+                                        <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                                                <div t-field="doc.date_invoice"/>
+                                                </td>
+                                            <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                                                    <div t-field="doc.date_due"/>
+                                            </td>
+                                            <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                                        <div t-field="doc.payment_term_id"/>
+                                            </td>
+                                            <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                                        <div t-field="doc.user_id"/>
+                                            </td>
+                                            </tr>
+                                           </tbody>
+                                </table>
+
+                            </div>
+
+                            <div class="row">
+                                <table class="table table-condensed table table-striped" style=" table-layout:fixed; padding-top=20px;">
+                                    <thead style=" background-color: #3498DB;">
+                                        <tr>
+                                            <th width="300px"><font color="#fff">Descripción</font></th>
+                                            <th><font color="#fff">Cantidad</font></th>
+                                            <th><font color="#fff">Und. Medida</font></th>
+                                            <th><font color="#fff">Precio</font></th>
+                                            <th><font color="#fff">Importe</font></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.invoice_line_ids" t-as="det">
+                                            <tr>
+                                                <td><span t-field="det.product_id.name"/></td>
+                                                <td><span t-field="det.quantity"/></td>
+                                                <td><span t-field="det.product_id.uom_id"/></td>
+                                                <td class="text-right"><span t-esc="det.price_unit"/></td>
+                                                <td class="text-right">
+                                                    <span t-esc="det.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-4 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td><strong>Subtotal</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td><strong>IGV</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="doc.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black" style=" background-color: #3498DB; color:#fff !important;">
+                                            <td><strong>Total</strong></td>
+                                            <td class="text-right">
+                                                 <span t-field="doc.amount_total" t-field-options='{"widget": "monetary", "display_currency": "doc.currency_id"}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <report id="efacturacion.report_movimiento"
+                model="account.invoice"
+                name="efacturacion.efacturacion_template_factura"
+                report_type="qweb-html"
+                string="Fact Electronica"
+                />
+    </data>
+</odoo>
